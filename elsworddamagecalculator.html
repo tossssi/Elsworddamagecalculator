@@ -19,8 +19,8 @@
             
             --accent-cyan: #00e5ff;
             --accent-yellow: #ffea00;
+            --alert-red: #ff4444; /* 280%超え用の赤 */
             --border-dim: #333;
-            --danger: #ff4444;
         }
 
         body {
@@ -44,7 +44,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 20px;
+            padding: 15px 20px;
             background: #111;
             border-bottom: 1px solid var(--border-dim);
             margin-bottom: 10px;
@@ -55,13 +55,14 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
 
+        /* タイトル：シックな1色に変更 */
         h1 {
-            font-size: 1.2rem;
-            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-yellow));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-size: 1.3rem;
+            color: #e0e0e0; /* シックなシルバーホワイト */
             margin: 0;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+            font-weight: 800;
         }
 
         .total-display-compact {
@@ -71,7 +72,7 @@
         }
         .total-label-compact {
             font-size: 0.8rem;
-            color: var(--accent-cyan);
+            color: #888; /* ラベルも落ち着いた色に */
             margin-right: 10px;
         }
 
@@ -86,7 +87,8 @@
             background-color: var(--card-bg);
             border-radius: 4px;
             overflow: hidden;
-            border-left: 3px solid transparent;
+            border-left: 3px solid transparent; /* JSで色制御 */
+            transition: border-color 0.3s ease;
         }
 
         /* 1行ヘッダー */
@@ -115,7 +117,7 @@
             opacity: 0.1;
             z-index: 0;
             width: 0%;
-            transition: width 0.5s ease;
+            transition: width 0.5s ease, background-color 0.3s ease;
         }
 
         /* コンテンツ */
@@ -145,36 +147,17 @@
             white-space: nowrap;
         }
 
-        /* ラベルと数値のスタイル */
-        .label-text {
-            font-size: 0.75rem;
-            color: #888;
-            margin-right: 4px;
-        }
-        .val-text { 
-            font-size: 1rem; 
-            color: #fff; 
-            min-width: 60px;
-            text-align: right;
-        }
-        .eff-text { 
-            font-size: 0.9rem; 
-            color: var(--accent-cyan); 
-            min-width: 60px;
-            text-align: right; 
-        }
+        .label-text { font-size: 0.75rem; color: #888; margin-right: 4px; }
+        .val-text { font-size: 1rem; color: #fff; min-width: 60px; text-align: right; }
+        .eff-text { font-size: 0.9rem; color: var(--accent-cyan); min-width: 60px; text-align: right; }
         
-        /* 間隔調整 */
-        .spacer {
-            width: 20px;
-        }
-
+        .spacer { width: 20px; }
         .arrow { font-size: 0.8rem; color: #555; margin-left: 10px; transition: transform 0.3s; }
         
-        /* ランク1位の特別色 */
-        .stat-card[data-rank="1"] { border-left-color: var(--accent-yellow); }
-        .stat-card[data-rank="1"] .eff-text { color: var(--accent-yellow); }
-        .stat-card[data-rank="1"] .bg-bar { background-color: var(--accent-yellow); opacity: 0.15; }
+        /* ランク1位の特別色（JSで上書きされない場合のデフォルト） */
+        .stat-card[data-rank="1"]:not([data-over="true"]) { border-left-color: var(--accent-yellow); }
+        .stat-card[data-rank="1"]:not([data-over="true"]) .eff-text { color: var(--accent-yellow); }
+        .stat-card[data-rank="1"]:not([data-over="true"]) .bg-bar { background-color: var(--accent-yellow); opacity: 0.15; }
 
         .stat-card:not([data-rank="1"]) { border-left-color: var(--accent-cyan); }
 
@@ -245,7 +228,7 @@
 </div>
 
 <script>
-    // データ初期設定（名称変更反映済み）
+    // データ初期設定
     let statsData = [
         { 
             id: "atk_percent", 
@@ -293,19 +276,28 @@
             id: "all_skill", 
             name: "全てのスキルダメージ増加", 
             calcType: "simple",
-            items: [{ label: "基礎値(固定)", val: 100, fixed: true }, { label: "ステータス表記", val: 104.50 }] 
+            items: [
+                { label: "基礎値(固定)", val: 100, fixed: true }, 
+                { label: "ステータス表記", val: 104.50 }
+            ] 
         },
         { 
             id: "trans_skill", 
             name: "強烈、超越スキルダメージ増加", 
             calcType: "simple",
-            items: [{ label: "基礎値(固定)", val: 100, fixed: true }, { label: "ステータス表記", val: 122.00 }] 
+            items: [
+                { label: "基礎値(固定)", val: 100, fixed: true }, 
+                { label: "ステータス表記", val: 122.00 }
+            ] 
         },
         { 
             id: "polar", 
             name: "両極化：攻撃/受けるダメージ増加", 
             calcType: "simple",
-            items: [{ label: "基礎値(固定)", val: 100, fixed: true }, { label: "ステータス表記", val: 53.70 }] 
+            items: [
+                { label: "基礎値(固定)", val: 100, fixed: true }, 
+                { label: "ステータス表記", val: 53.70 }
+            ] 
         },
         { 
             id: "dot", 
@@ -379,7 +371,6 @@
             card.className = 'stat-card';
             card.id = `card-${index}`;
 
-            // Header (1行・コンパクト・ラベル追加版)
             const header = document.createElement('div');
             header.className = 'stat-header';
             header.onclick = () => toggleDetails(index);
@@ -401,7 +392,6 @@
                 </div>
             `;
 
-            // Details
             const details = document.createElement('div');
             details.className = 'details-section';
             details.id = `details-${index}`;
@@ -539,13 +529,13 @@
         let globalMultiplier = 1.0;
         let efficiencies = [];
 
+        // 1. 計算＆データ収集ループ
         statsData.forEach((cat, idx) => {
             let catTotal = 0;
 
             if (cat.calcType === 'crit') {
                 let additiveTotal = 0;
                 let multiplierProduct = 1.0;
-
                 cat.items.forEach(item => {
                     if (item.type === 'stat_window') {
                         additiveTotal += (item.val - 150);
@@ -555,36 +545,62 @@
                         multiplierProduct *= (1 + item.val / 100);
                     }
                 });
-
                 const base = 150;
                 catTotal = additiveTotal + (base * multiplierProduct);
-
             } else {
                 catTotal = cat.items.reduce((sum, item) => sum + item.val, 0);
             }
 
             if (catTotal <= 0) catTotal = 1;
-
+            
+            // DOM更新
             document.getElementById(`total-${idx}`).innerText = catTotal.toFixed(2) + '%';
             
             globalMultiplier *= (catTotal / 100);
 
             const eff = (1 / catTotal) * 100;
-            efficiencies.push({ index: idx, val: eff });
+            efficiencies.push({ index: idx, val: eff, total: catTotal });
             document.getElementById(`eff-${idx}`).innerText = '+' + eff.toFixed(3) + '%';
         });
 
         const maxEff = Math.max(...efficiencies.map(e => e.val));
         const sorted = [...efficiencies].sort((a, b) => b.val - a.val);
 
+        // 2. 描画更新ループ（色やバーの長さ）
         efficiencies.forEach(item => {
             const rank = sorted.findIndex(e => e.index === item.index) + 1;
             const card = document.getElementById(`card-${item.index}`);
             const bar = document.getElementById(`bar-${item.index}`);
             
+            // 属性リセット
             card.setAttribute('data-rank', rank);
+            bar.style.backgroundColor = '';
+            card.style.borderLeftColor = '';
+            
+            // 幅設定
             const width = (item.val / maxEff) * 100;
             bar.style.width = `${width}%`;
+
+            // 色判定ロジック (280%超え優先)
+            if (item.total > 280) {
+                // 赤色アラート
+                card.setAttribute('data-over', 'true'); // CSS補助用
+                bar.style.backgroundColor = 'var(--alert-red)';
+                bar.style.opacity = 0.2;
+                card.style.borderLeftColor = 'var(--alert-red)';
+            } else {
+                card.setAttribute('data-over', 'false');
+                if (rank > 1) {
+                    // 通常ランク（シアン）
+                    const opacity = Math.max(0.1, (item.val / maxEff) * 0.2); 
+                    bar.style.opacity = opacity;
+                    // シアン色の透過ボーダー
+                    card.style.borderLeftColor = `rgba(0, 229, 255, ${Math.max(0.3, item.val / maxEff)})`;
+                } else {
+                    // 1位（CSSで黄色になるが、念のためリセット）
+                    bar.style.opacity = 0.15;
+                }
+            }
         });
 
         totalDisplay.innerText = globalMultiplier.toLocaleString(undefined, { maximumFractionDigits: 2, minimumFractionDigits: 2 });
