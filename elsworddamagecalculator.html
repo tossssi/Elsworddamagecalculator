@@ -36,7 +36,7 @@
 
         .container {
             width: 100%;
-            max-width: 950px; /* 文字数増えたので少し幅広げた */
+            max-width: 950px;
         }
 
         /* ヘッダー */
@@ -154,7 +154,7 @@
         .val-text { 
             font-size: 1rem; 
             color: #fff; 
-            min-width: 60px; /* 数値の幅確保 */
+            min-width: 60px;
             text-align: right;
         }
         .eff-text { 
@@ -245,7 +245,7 @@
 </div>
 
 <script>
-    // データ初期設定
+    // データ初期設定（名称変更反映済み）
     let statsData = [
         { 
             id: "atk_percent", 
@@ -280,7 +280,7 @@
         },
         { 
             id: "boss_dmg", 
-            name: "ボスに与えるダメージ", 
+            name: "ボスに与えるダメージ増加", 
             calcType: "simple",
             items: [
                 { label: "基礎値(固定)", val: 100, fixed: true },
@@ -291,25 +291,25 @@
         },
         { 
             id: "all_skill", 
-            name: "全スキルダメージ", 
+            name: "全てのスキルダメージ増加", 
             calcType: "simple",
             items: [{ label: "基礎値(固定)", val: 100, fixed: true }, { label: "ステータス表記", val: 104.50 }] 
         },
         { 
             id: "trans_skill", 
-            name: "強烈or超越スキル", 
+            name: "強烈、超越スキルダメージ増加", 
             calcType: "simple",
             items: [{ label: "基礎値(固定)", val: 100, fixed: true }, { label: "ステータス表記", val: 122.00 }] 
         },
         { 
             id: "polar", 
-            name: "両極化：攻撃/被撃", 
+            name: "両極化：攻撃/受けるダメージ増加", 
             calcType: "simple",
             items: [{ label: "基礎値(固定)", val: 100, fixed: true }, { label: "ステータス表記", val: 53.70 }] 
         },
         { 
             id: "dot", 
-            name: "与えた持続ダメージ", 
+            name: "与えたダメージのn%を追加持続ダメージ", 
             calcType: "simple",
             items: [
                 { label: "基礎値(固定)", val: 100, fixed: true },
@@ -325,7 +325,7 @@
         },
         { 
             id: "hp100_under", 
-            name: "HP100%以下の敵へ", 
+            name: "HP100％以下の敵を攻撃時、ダメージ増加", 
             calcType: "simple",
             items: [
                 { label: "基礎値(固定)", val: 100, fixed: true },
@@ -335,7 +335,7 @@
         },
         { 
             id: "hp50_over", 
-            name: "HP50%超過の敵へ", 
+            name: "HP50％超過の敵を攻撃時、ダメージ増加", 
             calcType: "simple",
             items: [
                 { label: "基礎値(固定)", val: 100, fixed: true },
@@ -345,7 +345,7 @@
         },
         { 
             id: "hp50_under", 
-            name: "HP50%以下の敵へ", 
+            name: "HP50％以下の敵を攻撃時、ダメージ増加", 
             calcType: "simple",
             items: [
                 { label: "基礎値(固定)", val: 100, fixed: true },
@@ -355,7 +355,7 @@
         },
         { 
             id: "hp30", 
-            name: "HP30%以下の敵へ", 
+            name: "HP30％以下の敵を攻撃時、ダメージ増加", 
             calcType: "simple",
             items: [
                 { label: "基礎値(固定)", val: 100, fixed: true },
