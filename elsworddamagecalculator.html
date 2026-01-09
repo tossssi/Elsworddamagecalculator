@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elsword Ultimate Calc V5 (Refined)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #0d0d0d;
+            --card-bg: #1a1a1a;
+            --card-hover: #252525;
+            --input-bg: #000000;
+            --text-main: #ffffff;
+            --text-sub: #777;
+            
+            --accent-cyan: #00e5ff;
+            --accent-yellow: #ffea00;
+            --border-dim: #333;
+            --danger: #ff4444;
+        }
+
+        body {
+            font-family: 'M PLUS Rounded 1c', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border-dim);
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-yellow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+            letter-spacing: 2px;
+            text-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
+        }
+
+        /* Total Score */
+        .total-panel {
+            background: #111;
+            border: 1px solid var(--accent-cyan);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            position: sticky;
+            top: 10px;
+            z-index: 100;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .total-val {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: #fff;
+            line-height: 1;
+            margin: 10px 0;
+        }
+
+        .total-label {
+            color: var(--accent-cyan);
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        /* Stats List */
+        .stats-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .stat-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .stat-header {
+            padding: 15px 20px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .stat-header:hover {
+            background-color: var(--card-hover);
+        }
+
+        .stat-card[data-rank="1"] { border-left-color: var(--accent-yellow); }
+        .stat-card[data-rank="1"] .eff-val { color: var(--accent-yellow); }
+        .stat-card[data-rank="1"] .bar-fill { background-color: var(--accent-yellow); box-shadow: 0 0 10px var(--accent-yellow); }
+
+        .stat-card:not([data-rank="1"]) { border-left-color: var(--accent-cyan); }
+        .stat-card:not([data-rank="1"]) .eff-val { color: var(--accent-cyan); }
+        .stat-card:not([data-rank="1"]) .bar-fill { background-color: var(--accent-cyan); }
+
+        .stat-info h3 { margin: 0 0 5px 0; font-size: 1.1rem; }
+
+        .meta-info {
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            display: flex;
+            gap: 20px;
+            align-items: baseline;
+        }
+        
+        .eff-val {
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-left: 5px;
+        }
+
+        .current-total { font-size: 1.2rem; font-weight: bold; color: #fff; }
+
+        .bar-bg {
+            height: 4px;
+            background: #333;
+            border-radius: 2px;
+            margin-top: 8px;
+            overflow: hidden;
+            width: 100%;
+        }
+        .bar-fill { height: 100%; width: 0%; transition: width 0.5s ease, opacity 0.5s ease; }
+
+        /* Details Section */
+        .details-section {
+            background-color: #141414;
+            border-top: 1px solid #333;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .details-section.open { max-height: 2000px; padding: 15px 20px; overflow: visible; }
+
+        /* Breakdown Rows - Grid System Update */
+        .breakdown-row {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 8px;
+            align-items: center;
+        }
+        
+        /* 列設定：クリダメ用（タイプ選択あり） */
+        /* 名前 | 数値 | %単位 | タイプ | 削除ボタン */
+        .breakdown-row.crit {
+            grid-template-columns: 1fr 90px 20px 80px 40px; 
+        }
+
+        /* 列設定：シンプル用 */
+        /* 名前 | 数値 | %単位 | 削除ボタン */
+        .breakdown-row.simple {
+            grid-template-columns: 1fr 90px 20px 40px; 
+        }
+
+        .breakdown-row input[type="text"] {
+            background: transparent; border: none; color: #aaa; border-bottom: 1px solid #333; padding: 5px; width: 100%;
+        }
+        .breakdown-row input[type="number"] {
+            background: var(--input-bg); border: 1px solid #333; border-radius: 4px; color: #fff; padding: 8px; text-align: right; font-weight: bold; width: 100%;
+        }
+        .breakdown-row select {
+            background: #222; border: 1px solid #444; color: #fff; padding: 5px; border-radius: 4px; font-size: 0.8rem;
+            cursor: pointer;
+        }
+        
+        /* % Label - 枠外に出して中央揃え */
+        .unit-label {
+            color: #555;
+            font-weight: bold;
+            font-size: 0.9rem;
+            text-align: center; 
+        }
+
+        /* Remove Button - ボタンっぽくしたよ */
+        .remove-btn { 
+            color: #888; 
+            cursor: pointer; 
+            text-align: center; 
+            font-weight: bold;
+            background-color: #2a2a2a;
+            border-radius: 6px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            border: 1px solid #333;
+        }
+        .remove-btn:hover { 
+            background-color: var(--danger); 
+            color: #fff; 
+            border-color: var(--danger);
+        }
+
+        /* 固定値の場合の削除ボタンエリア（空欄にするけどサイズは保つ） */
+        .remove-placeholder {
+            height: 36px;
+            width: 100%;
+        }
+
+        .add-btn {
+            background: #222; border: 1px dashed #555; color: #888; width: 100%; padding: 8px; border-radius: 4px; cursor: pointer; margin-top: 10px;
+        }
+        .add-btn:hover { background: #333; color: #fff; border-color: #888; }
+        
+        .fixed-val { color: #555; font-style: italic; pointer-events: none; border: none !important; background: transparent !important; }
+        
+        .formula-note { font-size: 0.75rem; color: #555; margin-bottom: 10px; font-style: italic; }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>ELSWORD DMG SCORE</h1>
+        <div style="color:#666; font-size:0.8rem; margin-top:5px;">クリックで詳細設定</div>
+    </header>
+
+    <div class="total-panel">
+        <div class="total-label">TOTAL MULTIPLIER</div>
+        <div class="total-val" id="totalDisplay">0.00</div>
+    </div>
+
+    <div class="stats-list" id="statsList"></div>
+</div>
+
+<script>
+    // データ初期設定（ユーザー指定の初期値を維持）
+    let statsData = [
+        { 
+            id: "atk_percent", 
+            name: "物魔攻撃力(%)", 
+            calcType: "simple",
+            items: [
+                { label: "基礎値(固定)", val: 100, fixed: true },
+                { label: "武器魔力石効果", val: 49.5 },
+                { label: "エクサ再錬効果", val: 8 },
+                { label: "レアバセット効果", val: 6 },
+                { label: "レアバアクセ効果", val: 9 },
+                { label: "スキリン効果", val: 0.5 },
+                { label: "ペット効果", val: 2 },
+                { label: "アーティファクト効果", val: 3 },
+                { label: "エルコレ効果", val: 3.75 },
+                { label: "シナジー", val: 1 }
+            ] 
+        },
+        { 
+            id: "cri_dmg", 
+            name: "クリティカルダメージ", 
+            calcType: "crit",
+            items: [
+                { label: "ステータス表記", val: 215.00, type: "stat_window", fixed: false },
+                { label: "加算パッシブ", val: 0, type: "add", fixed: false },
+                { label: "乗算パッシブ", val: 0, type: "multi", fixed: false },
+                { label: "アットマ草木", val: 26, type: "multi", fixed: false },
+                { label: "エクサ赤セット", val: 10, type: "multi", fixed: false },
+                { label: "刻印", val: 5, type: "multi", fixed: false },
+                { label: "マエストロヘイロー", val: 2, type: "multi", fixed: false },
+            ]
+        },
+        { 
+            id: "boss_dmg", 
+            name: "ボスに与えるダメージ", 
+            calcType: "simple",
+            items: [
+                { label: "基礎値(固定)", val: 100, fixed: true },
+                { label: "ステータス表記", val: 150.00 },
+                { label: "加算パッシブ", val: 20.00 },
+                { label: "ギルドスキル", val: 2.50 }
+            ]
+        },
+        { 
+            id: "all_skill", 
+            name: "全スキルダメージ", 
+            calcType: "simple",
+            items: [{ label: "基礎値(固定)", val: 100, fixed: true }, { label: "ステータス表記", val: 104.50 }] 
+        },
+        { 
+            id: "trans_skill", 
+            name: "強烈or超越スキル", 
+            calcType: "simple",
+            items: [{ label: "基礎値(固定)", val: 100, fixed: true }, { label: "ステータス表記", val: 122.00 }] 
+        },
+        { 
+            id: "polar", 
+            name: "両極化：攻撃/被撃", 
+            calcType: "simple",
+            items: [{ label: "基礎値(固定)", val: 100, fixed: true }, { label: "ステータス表記", val: 53.70 }] 
+        },
+        { 
+            id: "dot", 
+            name: "与えた持続ダメージ", 
+            calcType: "simple",
+            items: [
+                { label: "基礎値(固定)", val: 100, fixed: true },
+                { label: "リンクアバ効果", val: 2.00 },
+                { label: "エクサ上衣回路", val: 12.00 },
+                { label: "エクサチップ", val: 12.00 },
+                { label: "アットマ上アクセ", val: 5.00 },
+                { label: "レアバセット効果", val: 12.00 },
+                { label: "レアバ武器効果", val: 5.00 },
+                { label: "レアバアクセ効果", val: 7.00 },
+                { label: "シナジー：歪曲", val: 2.00 }
+            ]
+        },
+        { 
+            id: "hp100_under", 
+            name: "HP100%以下の敵へ", 
+            calcType: "simple",
+            items: [
+                { label: "基礎値(固定)", val: 100, fixed: true },
+                { label: "武器効果", val: 5 },
+                { label: "レアバセット効果", val: 10 }
+            ] 
+        },
+        { 
+            id: "hp50_over", 
+            name: "HP50%超過の敵へ", 
+            calcType: "simple",
+            items: [
+                { label: "基礎値(固定)", val: 100, fixed: true },
+                { label: "エクサ回路効果", val: 10 },
+                { label: "エクサチップ効果", val: 5 }
+            ] 
+        },
+        { 
+            id: "hp50_under", 
+            name: "HP50%以下の敵へ", 
+            calcType: "simple",
+            items: [
+                { label: "基礎値(固定)", val: 100, fixed: true },
+                { label: "エクサ回路効果", val: 10 },
+                { label: "エクサチップ効果", val: 5 }
+            ] 
+        },
+        { 
+            id: "hp30", 
+            name: "HP30%以下の敵へ", 
+            calcType: "simple",
+            items: [
+                { label: "基礎値(固定)", val: 100, fixed: true },
+                { label: "ソケット効果", val: 0 }
+            ] 
+        },
+    ];
+
+    const listContainer = document.getElementById('statsList');
+    const totalDisplay = document.getElementById('totalDisplay');
+
+    function init() {
+        render();
+        calculate();
+    }
+
+    function render() {
+        listContainer.innerHTML = '';
+        statsData.forEach((cat, index) => {
+            const card = document.createElement('div');
+            card.className = 'stat-card';
+            card.id = `card-${index}`;
+
+            // Header
+            const header = document.createElement('div');
+            header.className = 'stat-header';
+            header.onclick = () => toggleDetails(index);
+            header.innerHTML = `
+                <div class="stat-info">
+                    <h3>${cat.name}</h3>
+                    <div class="meta-info">
+                        <span>合計: <strong id="total-${index}" class="current-total">0.00%</strong></span>
+                        <span>1%上昇効率: <strong class="eff-val" id="eff-${index}">0.00%</strong></span>
+                    </div>
+                    <div class="bar-bg"><div class="bar-fill" id="bar-${index}"></div></div>
+                </div>
+                <div style="font-size:1.5rem; color:#444;">▼</div>
+            `;
+
+            // Details
+            const details = document.createElement('div');
+            details.className = 'details-section';
+            details.id = `details-${index}`;
+
+            // Note for Crit
+            if(cat.calcType === 'crit') {
+                const note = document.createElement('div');
+                note.className = 'formula-note';
+                note.innerText = '計算式: (ステ窓 - 150) + 加算 + (150 × 乗算の積)';
+                details.appendChild(note);
+            }
+
+            const rowsContainer = document.createElement('div');
+            rowsContainer.id = `rows-${index}`;
+            details.appendChild(rowsContainer);
+
+            const addBtn = document.createElement('button');
+            addBtn.className = 'add-btn';
+            addBtn.innerText = '＋ 項目を追加';
+            addBtn.onclick = (e) => { e.stopPropagation(); addItem(index); };
+            details.appendChild(addBtn);
+
+            card.appendChild(header);
+            card.appendChild(details);
+            listContainer.appendChild(card);
+
+            renderRows(index);
+        });
+    }
+
+    function renderRows(catIndex) {
+        const container = document.getElementById(`rows-${catIndex}`);
+        const cat = statsData[catIndex];
+        container.innerHTML = '';
+        
+        cat.items.forEach((item, itemIndex) => {
+            const row = document.createElement('div');
+            // クラス名でグリッド定義を切り替え
+            row.className = cat.calcType === 'crit' ? 'breakdown-row crit' : 'breakdown-row simple';
+
+            // 1. 名前入力
+            const nameInput = document.createElement('input');
+            nameInput.type = 'text';
+            nameInput.value = item.label;
+            nameInput.placeholder = '項目名';
+            if(item.fixed) nameInput.readOnly = true;
+            nameInput.oninput = (e) => { cat.items[itemIndex].label = e.target.value; };
+
+            // 2. 数値入力
+            const valInput = document.createElement('input');
+            valInput.type = 'number';
+            valInput.value = item.val;
+            valInput.step = '0.1';
+            if(item.fixed) valInput.className = 'fixed-val';
+            valInput.oninput = (e) => {
+                let v = parseFloat(e.target.value);
+                if(isNaN(v)) v = 0;
+                cat.items[itemIndex].val = v;
+                calculate();
+            };
+            
+            // 3. 単位(%) - 枠外に出したので見やすい！
+            const unitLabel = document.createElement('div');
+            unitLabel.className = 'unit-label';
+            unitLabel.innerText = '%';
+
+            row.appendChild(nameInput);
+            row.appendChild(valInput);
+            row.appendChild(unitLabel);
+
+            // 4. タイプ選択 (Critのみ)
+            if (cat.calcType === 'crit') {
+                const typeSelect = document.createElement('select');
+                const ops = [
+                    {val: 'add', text: '加算'},
+                    {val: 'multi', text: '乗算'},
+                ];
+                
+                if (item.type === 'stat_window') {
+                   const op = document.createElement('option');
+                   op.value = 'stat_window';
+                   op.text = 'ステ窓';
+                   typeSelect.appendChild(op);
+                   typeSelect.disabled = true;
+                } else {
+                    ops.forEach(o => {
+                        const op = document.createElement('option');
+                        op.value = o.val;
+                        op.text = o.text;
+                        if(item.type === o.val) op.selected = true;
+                        typeSelect.appendChild(op);
+                    });
+                    typeSelect.onchange = (e) => {
+                        cat.items[itemIndex].type = e.target.value;
+                        calculate();
+                    };
+                }
+                row.appendChild(typeSelect);
+            }
+
+            // 5. 削除ボタン (×をボタン化)
+            if(!item.fixed) {
+                const delBtn = document.createElement('div');
+                delBtn.className = 'remove-btn';
+                delBtn.innerText = '×';
+                delBtn.onclick = () => {
+                    cat.items.splice(itemIndex, 1);
+                    renderRows(catIndex);
+                    calculate();
+                };
+                row.appendChild(delBtn);
+            } else {
+                // 固定項目の場合もレイアウト崩れを防ぐためのダミー
+                const placeholder = document.createElement('div');
+                placeholder.className = 'remove-placeholder';
+                row.appendChild(placeholder);
+            }
+
+            container.appendChild(row);
+        });
+    }
+
+    function addItem(catIndex) {
+        const cat = statsData[catIndex];
+        const type = cat.calcType === 'crit' ? 'multi' : 'add';
+        cat.items.push({ label: '新規項目', val: 0, fixed: false, type: type });
+        renderRows(catIndex);
+    }
+
+    function toggleDetails(index) {
+        document.getElementById(`details-${index}`).classList.toggle('open');
+    }
+
+    function calculate() {
+        let globalMultiplier = 1.0;
+        let efficiencies = [];
+
+        statsData.forEach((cat, idx) => {
+            let catTotal = 0;
+
+            if (cat.calcType === 'crit') {
+                let additiveTotal = 0;
+                let multiplierProduct = 1.0;
+
+                cat.items.forEach(item => {
+                    if (item.type === 'stat_window') {
+                        additiveTotal += (item.val - 150);
+                    } else if (item.type === 'add') {
+                        additiveTotal += item.val;
+                    } else if (item.type === 'multi') {
+                        multiplierProduct *= (1 + item.val / 100);
+                    }
+                });
+
+                const base = 150;
+                catTotal = additiveTotal + (base * multiplierProduct);
+
+            } else {
+                catTotal = cat.items.reduce((sum, item) => sum + item.val, 0);
+            }
+
+            if (catTotal <= 0) catTotal = 1;
+
+            document.getElementById(`total-${idx}`).innerText = catTotal.toFixed(2) + '%';
+            
+            globalMultiplier *= (catTotal / 100);
+
+            const eff = (1 / catTotal) * 100;
+            efficiencies.push({ index: idx, val: eff });
+            document.getElementById(`eff-${idx}`).innerText = '+' + eff.toFixed(3) + '%';
+        });
+
+        const maxEff = Math.max(...efficiencies.map(e => e.val));
+        const sorted = [...efficiencies].sort((a, b) => b.val - a.val);
+
+        efficiencies.forEach(item => {
+            const rank = sorted.findIndex(e => e.index === item.index) + 1;
+            const card = document.getElementById(`card-${item.index}`);
+            const bar = document.getElementById(`bar-${item.index}`);
+            
+            card.setAttribute('data-rank', rank);
+            const width = (item.val / maxEff) * 100;
+            bar.style.width = `${width}%`;
+            
+            let opacity = 1.0;
+            if (rank > 1) {
+                opacity = Math.max(0.2, item.val / maxEff);
+            }
+            bar.style.opacity = opacity;
+            if (rank > 1) {
+                card.style.borderLeftColor = `rgba(0, 229, 255, ${opacity})`;
+            }
+        });
+
+        totalDisplay.innerText = globalMultiplier.toLocaleString(undefined, { maximumFractionDigits: 2, minimumFractionDigits: 2 });
+    }
+
+    init();
+
+</script>
+
+</body>
+</html>
