@@ -21,6 +21,7 @@
             --accent-yellow: #ffea00;
             --alert-red: #ff4444;
             --border-dim: #333;
+            
             --toggle-off: #444;
             --toggle-on: var(--accent-cyan);
         }
@@ -41,7 +42,7 @@
             max-width: 950px;
         }
 
-        /* ヘルプボタンエリア */
+        /* --- ヘルプボタンエリア --- */
         .nav-area {
             display: flex;
             justify-content: flex-end;
@@ -71,7 +72,7 @@
             box-shadow: 0 0 15px var(--accent-cyan);
         }
 
-        /* ヘッダー */
+        /* --- ヘッダー --- */
         header {
             display: flex;
             justify-content: space-between;
@@ -107,7 +108,7 @@
             margin-right: 10px;
         }
 
-        /* Stats List */
+        /* --- リスト --- */
         .stats-list {
             display: flex;
             flex-direction: column;
@@ -124,7 +125,7 @@
 
         .stat-header {
             position: relative;
-            height: 36px;
+            height: 44px;
             padding: 0 15px;
             display: flex;
             align-items: center;
@@ -158,6 +159,14 @@
             align-items: center;
         }
 
+        .stat-icon-img {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 2px rgba(0,0,0,0.5));
+        }
+
         .stat-name {
             font-weight: bold;
             font-size: 0.95rem;
@@ -166,6 +175,8 @@
             overflow: hidden;
             text-overflow: ellipsis;
             margin-right: 10px;
+            display: flex;
+            align-items: center;
         }
 
         .meta-group {
@@ -187,7 +198,7 @@
 
         .stat-card:not([data-rank="1"]) { border-left-color: var(--accent-cyan); }
 
-        /* Details Section */
+        /* --- 詳細エリア --- */
         .details-section {
             background-color: #111;
             border-top: 1px solid #222;
@@ -205,54 +216,82 @@
             align-items: center;
         }
         
-        .breakdown-row.crit { grid-template-columns: 1fr 70px 15px 60px 30px; }
-        .breakdown-row.simple { grid-template-columns: 1fr 70px 15px 30px; }
-        
-        /* トグル用の特別な行レイアウト */
-        .breakdown-row.toggle-row {
-            grid-template-columns: 1fr 100px 30px; /* 名前 | スイッチ | 削除スペース */
+        .breakdown-row.crit { grid-template-columns: 1fr 70px 15px 60px 40px 30px; }
+        .breakdown-row.simple { grid-template-columns: 1fr 70px 15px 40px 30px; }
+        .breakdown-row.toggle-row { grid-template-columns: 1fr 100px 30px; }
+
+        .breakdown-row.disabled input[type="text"],
+        .breakdown-row.disabled input[type="number"],
+        .breakdown-row.disabled select,
+        .breakdown-row.disabled .unit-label,
+        .breakdown-row.disabled .item-icon,
+        .breakdown-row.disabled .type-label {
+            opacity: 0.4;
+        }
+
+        .name-container {
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+        .item-icon {
+            width: 16px;
+            height: 16px;
+            margin-right: 6px;
+            object-fit: contain;
+            opacity: 0.8;
         }
 
         .breakdown-row input[type="text"] {
             background: transparent; border: none; color: #aaa; border-bottom: 1px solid #333; 
             padding: 2px 5px; width: 100%; font-size: 0.9rem;
             font-family: 'M PLUS Rounded 1c', sans-serif;
+            transition: opacity 0.2s;
         }
         .breakdown-row input[type="number"] {
             background: var(--input-bg); border: 1px solid #333; border-radius: 4px; color: #fff; 
             padding: 4px; text-align: right; font-weight: bold; width: 100%; font-size: 0.9rem;
             font-family: 'M PLUS Rounded 1c', sans-serif;
+            transition: opacity 0.2s;
         }
         .breakdown-row select {
             background: #222; border: 1px solid #444; color: #fff; padding: 2px; border-radius: 4px; font-size: 0.8rem;
+            font-family: 'M PLUS Rounded 1c', sans-serif;
+            transition: opacity 0.2s;
+        }
+        
+        /* 固定のタイプラベル（加算・乗算） */
+        .type-label {
+            color: #888;
+            font-size: 0.8rem;
+            text-align: center;
+            font-weight: bold;
             font-family: 'M PLUS Rounded 1c', sans-serif;
         }
         
         .unit-label { color: #555; font-size: 0.8rem; text-align: center; }
 
         .remove-btn { 
-            color: #666; cursor: pointer; text-align: center; font-weight: bold; font-size: 1rem;
-            line-height: 24px; height: 24px; border-radius: 4px;
+            background: #2a2a2a; border: 1px solid #333; color: #888; 
+            cursor: pointer; text-align: center; font-weight: bold; font-size: 1rem;
+            line-height: 24px; height: 26px; border-radius: 6px;
             font-family: 'M PLUS Rounded 1c', sans-serif;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
         }
-        .remove-btn:hover { background-color: var(--danger); color: #fff; }
-        .remove-placeholder { height: 24px; width: 100%; }
+        .remove-btn:hover { background-color: var(--alert-red); color: #fff; border-color: var(--alert-red); }
+        .remove-placeholder { height: 26px; width: 100%; }
 
         .add-btn {
             background: #222; border: 1px dashed #444; color: #666; width: 100%; 
-            padding: 4px; border-radius: 4px; cursor: pointer; margin-top: 5px; font-size: 0.8rem;
+            padding: 6px; border-radius: 4px; cursor: pointer; margin-top: 5px; font-size: 0.85rem;
             font-family: 'M PLUS Rounded 1c', sans-serif;
         }
         .add-btn:hover { background: #333; color: #fff; }
         
-        /* 計算式 */
-        .formula-note { 
-            font-size: 0.9rem; 
-            color: #666; 
-            margin-bottom: 10px; 
-        }
+        .formula-note { font-size: 0.9rem; color: #666; margin-bottom: 10px; }
         
-        /* 固定値 */
+        /* 固定値スタイル */
         .fixed-val { 
             color: #555 !important; 
             pointer-events: none; 
@@ -261,122 +300,38 @@
         }
 
         /* --- トグルスイッチ --- */
-        .switch-container {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            width: 100%;
-        }
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 24px;
-        }
-        .switch input { 
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
+        .switch-container { display: flex; align-items: center; justify-content: center; width: 100%; }
+        .switch { position: relative; display: inline-block; width: 36px; height: 20px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
         .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: var(--toggle-off);
-            transition: .4s;
-            border-radius: 24px;
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: var(--toggle-off); transition: .4s; border-radius: 20px;
         }
         .slider:before {
-            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
+            position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px;
+            background-color: white; transition: .4s; border-radius: 50%;
         }
-        input:checked + .slider {
-            background-color: var(--toggle-on);
-            box-shadow: 0 0 10px var(--toggle-on);
-        }
-        input:checked + .slider:before {
-            transform: translateX(26px);
-        }
-        .switch-label {
-            margin-right: 10px;
-            font-size: 0.8rem;
-            color: #aaa;
-        }
+        input:checked + .slider { background-color: var(--toggle-on); box-shadow: 0 0 8px var(--toggle-on); }
+        input:checked + .slider:before { transform: translateX(16px); }
+        .switch-label { margin-right: 10px; font-size: 0.8rem; color: #aaa; }
 
         /* --- モーダル --- */
-        .modal {
-            display: none; 
-            position: fixed; 
-            z-index: 2000; 
-            left: 0; top: 0; width: 100%; height: 100%; 
-            background-color: rgba(0,0,0,0.7); 
-            backdrop-filter: blur(5px);
-        }
-        .modal-content {
-            background-color: #1a1a1a;
-            margin: 5% auto; 
-            padding: 0;
-            border: 1px solid var(--accent-cyan);
-            border-radius: 12px;
-            width: 90%; 
-            max-width: 700px;
-            box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
-            color: #fff;
-            animation: modalFadeIn 0.3s;
-        }
-        @keyframes modalFadeIn {
-            from {opacity: 0; transform: translateY(-20px);}
-            to {opacity: 1; transform: translateY(0);}
-        }
-        .modal-header {
-            padding: 15px 20px;
-            background: #111;
-            border-bottom: 1px solid #333;
-            border-radius: 12px 12px 0 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); backdrop-filter: blur(5px); }
+        .modal-content { background-color: #1a1a1a; margin: 5% auto; padding: 0; border: 1px solid var(--accent-cyan); border-radius: 12px; width: 90%; max-width: 700px; box-shadow: 0 0 20px rgba(0, 229, 255, 0.3); color: #fff; animation: modalFadeIn 0.3s; }
+        @keyframes modalFadeIn { from {opacity: 0; transform: translateY(-20px);} to {opacity: 1; transform: translateY(0);} }
+        .modal-header { padding: 15px 20px; background: #111; border-bottom: 1px solid #333; border-radius: 12px 12px 0 0; display: flex; justify-content: space-between; align-items: center; }
         .modal-title { font-size: 1.2rem; font-weight: bold; color: var(--accent-cyan); }
         .close-btn { color: #aaa; font-size: 28px; font-weight: bold; cursor: pointer; line-height: 1; }
         .close-btn:hover { color: #fff; }
-        
         .modal-body { padding: 20px; }
-        
-        .guide-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
+        .guide-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         @media (max-width: 600px) { .guide-grid { grid-template-columns: 1fr; } }
-
-        .guide-step {
-            background: #222;
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 4px solid #555;
-        }
-        .step-num { 
-            font-size: 0.8rem; color: var(--accent-cyan); font-weight: bold; margin-bottom: 5px; display: block; 
-        }
+        .guide-step { background: #222; padding: 15px; border-radius: 8px; border-left: 4px solid #555; }
+        .step-num { font-size: 0.8rem; color: var(--accent-cyan); font-weight: bold; margin-bottom: 5px; display: block; }
         .step-text { font-size: 0.95rem; line-height: 1.6; }
         .highlight-yellow { color: var(--accent-yellow); font-weight: bold; }
         .highlight-red { color: var(--alert-red); font-weight: bold; }
-
-        .modal-footer {
-            padding: 15px;
-            text-align: center;
-            border-top: 1px solid #333;
-            font-size: 0.9rem;
-            color: #888;
-        }
+        .modal-footer { padding: 15px; text-align: center; border-top: 1px solid #333; font-size: 0.9rem; color: #888; }
 
     </style>
 </head>
@@ -409,29 +364,28 @@
                 <div class="guide-step" style="border-left-color: var(--accent-cyan);">
                     <span class="step-num">STEP 1</span>
                     <div class="step-text">
-                        項目のバーをクリックして、現在のステータスやパッシブの数値を入力します。<br>
-                        <small>※「新規」ボタンで項目を追加できます。</small>
+                        項目のバーをクリックして、詳細を開きます。<br>
+                        数値入力やスイッチ(ON/OFF)でシミュレーションできます。
                     </div>
                 </div>
                 <div class="guide-step" style="border-left-color: var(--accent-cyan);">
                     <span class="step-num">STEP 2</span>
                     <div class="step-text">
-                        右側の数値<strong>「1%上昇効率」</strong>をチェックします。<br>
-                        この数値が大きいほど、そのステータスを上げる恩恵がデカいです！
+                        右側の<strong>「1%上昇効率」</strong>をチェック！<br>
+                        この数値が大きい項目を強化するのが最も効率的です。
                     </div>
                 </div>
                 <div class="guide-step" style="border-left-color: var(--accent-yellow);">
                     <span class="step-num">STEP 3</span>
                     <div class="step-text">
-                        一番効率が良い項目は<span class="highlight-yellow">黄色のバー</span>で表示されます。<br>
-                        迷ったら黄色の項目を強化しましょう！
+                        効率No.1は<span class="highlight-yellow">黄色のバー</span>、<br>
+                        減衰ライン(280%)超えは<span class="highlight-red">赤色のバー</span>で表示されます。
                     </div>
                 </div>
-                <div class="guide-step" style="border-left-color: var(--alert-red);">
-                    <span class="step-num">ATTENTION</span>
+                <div class="guide-step" style="border-left-color: #fff;">
+                    <span class="step-num">TIP</span>
                     <div class="step-text">
-                        合計が280%を超えると<span class="highlight-red">赤色のバー</span>になります。<br>
-                        減衰ラインなので、これ以上盛るのはコスパが悪いです！
+                        📌アイコンの項目は削除できません。基礎値(固定)はスイッチも操作できません。
                     </div>
                 </div>
             </div>
@@ -443,143 +397,176 @@
 </div>
 
 <script>
-    // データ初期設定
+    // ▼ カテゴリアイコン ▼
+    const icons = {
+        sword: 'https://placehold.jp/30/00e5ff/ffffff/24x24.png?text=⚔️', 
+        crit: 'https://placehold.jp/30/ffea00/000000/24x24.png?text=💥',
+        boss: 'https://placehold.jp/30/ff4444/ffffff/24x24.png?text=👿',
+        skill: 'https://placehold.jp/30/00e5ff/ffffff/24x24.png?text=✨',
+        trans: 'https://placehold.jp/30/aa00ff/ffffff/24x24.png?text=🔮',
+        polar: 'https://placehold.jp/30/ffffff/000000/24x24.png?text=☯️',
+        dot: 'https://placehold.jp/30/00ff00/000000/24x24.png?text=☠️',
+        hp: 'https://placehold.jp/30/ff0000/ffffff/24x24.png?text=❤️'
+    };
+    
+    // ▼ 初期項目用アイコン（ピン） ▼
+    const presetIcon = 'https://placehold.jp/20/ffffff/000000/16x16.png?text=📌';
+
+    /*
+      データ設定
+      fixed: true -> 削除不可(×ボタンなし)、📌アイコン表示
+      edit: true -> 数値入力可能
+      edit: false -> 数値入力不可(グレーアウト)
+    */
     let statsData = [
         { 
             id: "atk_percent", 
             name: "物魔攻撃力(%)", 
+            icon: icons.sword,
             calcType: "simple",
             items: [
-                { label: "基礎値(固定)", val: 100, fixed: true },
-                { label: "武器魔力付与 合算", val: 37.5 },
-                { label: "エクサ再錬効果", val: 8 },
-                { label: "レアバセット効果", val: 6 },
-                { label: "レアバアクセ効果", val: 9 },
-                { label: "スキリン[固定効果]", val: 0.5 },
-                { label: "ペットパッシブ", val: 2 },
-                { label: "アーティファクト成長1段階", val: 3 },
-                { label: "エルコレ効果", val: 3.75 },
-                { label: "シナジー", val: 1 },
-                { label: "オプション変換効果", val: 12 }
+                { label: "基礎値(固定)", val: 100, fixed: true, edit: false, on: true }, // 最上部固定
+                { label: "武器魔力付与 合算", val: 37.5, fixed: true, edit: true, on: true },
+                { label: "エクサ再錬効果", val: 8, fixed: true, edit: true, on: true },
+                { label: "レアバセット効果", val: 6, fixed: true, edit: true, on: true },
+                { label: "レアバアクセ効果", val: 9, fixed: true, edit: true, on: true },
+                { label: "エルコレ効果", val: 3.75, fixed: true, edit: true, on: true },
+                { label: "オプション変換効果", val: 12, fixed: true, edit: true, on: true },
+                
+                // --- ここから編集不可グループ ---
+                { label: "スキリン[固定効果]", val: 0.5, fixed: true, edit: false, on: true },
+                { label: "ペットパッシブ", val: 2, fixed: true, edit: false, on: true },
+                { label: "アーティファクト成長1段階", val: 3, fixed: true, edit: false, on: true },
+                { label: "シナジー", val: 1, fixed: true, edit: false, on: true },
             ] 
         },
         { 
             id: "cri_dmg", 
             name: "クリティカルダメージ", 
+            icon: icons.crit,
             calcType: "crit",
             items: [
-                { label: "ステータス表記", val: 215.00, type: "stat_window", fixed: false },
-                { label: "加算パッシブ", val: 0, type: "add", fixed: false },
-                { label: "乗算パッシブ", val: 0, type: "multi", fixed: false },
-                { label: "アットマ草木", val: 26, type: "multi", fixed: false },
-                { label: "エクサ赤セット", val: 10, type: "multi", fixed: false },
-                { label: "刻印", val: 5, type: "multi", fixed: false },
-                // マエストロヘイローをトグルタイプに変更
-                { label: "マエストロヘイロー", val: 2, type: "toggle", fixed: true, on: false },
+                { label: "ステ表記", val: 215.00, type: "stat_window", fixed: true, edit: true, on: true },
+                { label: "加算パッシブ", val: 0, type: "add", fixed: true, edit: true, on: true },
+                { label: "乗算パッシブ", val: 0, type: "multi", fixed: true, edit: true, on: true },
+                { label: "アットマ草木", val: 26, type: "multi", fixed: true, edit: true, on: true },
+                
+                // --- 編集不可グループ ---
+                { label: "エクサ赤セット", val: 10, type: "multi", fixed: true, edit: false, on: true },
+                { label: "刻印", val: 5, type: "multi", fixed: true, edit: false, on: true },
+                { label: "マエストロヘイロー", val: 2, type: "multi", fixed: true, edit: false, on: true },
             ]
         },
         { 
             id: "boss_dmg", 
             name: "ボスに与えるダメージ増加", 
+            icon: icons.boss,
             calcType: "simple",
             items: [
-                { label: "基礎値(固定)", val: 100, fixed: true },
-                { label: "ステータス表記", val: 150.00 },
-                // 初期値を0に変更
-                { label: "加算パッシブ", val: 0.00 },
-                { label: "ギルドスキル", val: 2.50 }
+                { label: "基礎値(固定)", val: 100, fixed: true, edit: false, on: true },
+                { label: "ステータス表記", val: 150.00, fixed: true, edit: true, on: true },
+                { label: "加算パッシブ", val: 0.00, fixed: true, edit: true, on: true },
+                { label: "ギルドスキル", val: 2.50, fixed: true, edit: true, on: true }
             ]
         },
         { 
             id: "all_skill", 
             name: "全てのスキルダメージ増加", 
+            icon: icons.skill,
             calcType: "simple",
             items: [
-                { label: "基礎値(固定)", val: 100, fixed: true }, 
-                { label: "ステータス表記", val: 104.50 }
+                { label: "基礎値(固定)", val: 100, fixed: true, edit: false, on: true }, 
+                { label: "ステータス表記", val: 104.50, fixed: true, edit: true, on: true }
             ] 
         },
         { 
             id: "trans_skill", 
             name: "強烈、超越スキルダメージ増加", 
+            icon: icons.trans,
             calcType: "simple",
             items: [
-                { label: "基礎値(固定)", val: 100, fixed: true }, 
-                { label: "ステータス表記", val: 122.00 }
+                { label: "基礎値(固定)", val: 100, fixed: true, edit: false, on: true }, 
+                { label: "ステータス表記", val: 122.00, fixed: true, edit: true, on: true }
             ] 
         },
         { 
             id: "polar", 
             name: "両極化：攻撃/受けるダメージ増加", 
+            icon: icons.polar,
             calcType: "simple",
             items: [
-                { label: "基礎値(固定)", val: 100, fixed: true }, 
-                { label: "ステータス表記", val: 53.70 }
+                { label: "基礎値(固定)", val: 100, fixed: true, edit: false, on: true }, 
+                { label: "ステータス表記", val: 53.70, fixed: true, edit: true, on: true }
             ] 
         },
         { 
             id: "dot", 
             name: "与えたダメージのn%を追加持続ダメージ", 
+            icon: icons.dot,
             calcType: "simple",
             items: [
-                { label: "基礎値(固定)", val: 100, fixed: true },
-                { label: "レイド3点セット効果", val: 5.00 },
-                { label: "リンクアバ効果", val: 2.00 },
-                { label: "エクサ上衣回路", val: 12.00 },
-                { label: "エクサチップ", val: 12.00 },
-                { label: "アットマ上アクセ", val: 5.00 },
-                { label: "レアバセット効果", val: 12.00 },
-                { label: "レアバ武器効果", val: 5.00 },
-                { label: "レアバアクセ効果", val: 7.00 },
-                { label: "シナジー：歪曲", val: 2.00 },
-                { label: "オプション変換効果", val: 12.00 }
+                { label: "基礎値(固定)", val: 100, fixed: true, edit: false, on: true },
+                { label: "エクサ上衣回路", val: 12.00, fixed: true, edit: true, on: true },
+                { label: "エクサチップ", val: 12.00, fixed: true, edit: true, on: true },
+                { label: "アットマ上アクセ", val: 5.00, fixed: true, edit: true, on: true },
+                { label: "レアバセット効果", val: 12.00, fixed: true, edit: true, on: true },
+                { label: "レアバ武器効果", val: 5.00, fixed: true, edit: true, on: true },
+                { label: "レアバアクセ効果", val: 7.00, fixed: true, edit: true, on: true },
+                { label: "オプション変換効果", val: 12.00, fixed: true, edit: true, on: true },
+                
+                // --- 編集不可グループ ---
+                { label: "レイド3点セット効果", val: 5.00, fixed: true, edit: false, on: true },
+                { label: "リンクアバ効果", val: 2.00, fixed: true, edit: false, on: true },
+                { label: "シナジー：歪曲", val: 2.00, fixed: true, edit: false, on: true },
             ]
         },
         { 
             id: "hp100_under", 
             name: "HP100％以下の敵を攻撃時、ダメージ増加", 
+            icon: icons.hp,
             calcType: "simple",
             items: [
-                { label: "基礎値(固定)", val: 100, fixed: true },
-                { label: "武器効果", val: 5 },
-                { label: "レアバセット効果", val: 10 }
+                { label: "基礎値(固定)", val: 100, fixed: true, edit: false, on: true },
+                { label: "レアバセット効果", val: 10, fixed: true, edit: true, on: true },
+                { label: "武器効果", val: 5, fixed: true, edit: false, on: true },
             ] 
         },
         { 
             id: "hp50_over", 
             name: "HP50％超過の敵を攻撃時、ダメージ増加", 
+            icon: icons.hp,
             calcType: "simple",
             items: [
-                { label: "基礎値(固定)", val: 100, fixed: true },
-                { label: "エクサ回路効果", val: 10 },
-                { label: "エクサチップ効果", val: 5 }
+                { label: "基礎値(固定)", val: 100, fixed: true, edit: false, on: true },
+                { label: "エクサ回路効果", val: 10, fixed: true, edit: true, on: true },
+                { label: "エクサチップ効果", val: 5, fixed: true, edit: true, on: true }
             ] 
         },
         { 
             id: "hp50_under", 
             name: "HP50％以下の敵を攻撃時、ダメージ増加", 
+            icon: icons.hp,
             calcType: "simple",
             items: [
-                { label: "基礎値(固定)", val: 100, fixed: true },
-                { label: "エクサ回路効果", val: 10 },
-                { label: "エクサチップ効果", val: 5 }
+                { label: "基礎値(固定)", val: 100, fixed: true, edit: false, on: true },
+                { label: "エクサ回路効果", val: 10, fixed: true, edit: true, on: true },
+                { label: "エクサチップ効果", val: 5, fixed: true, edit: true, on: true }
             ] 
         },
         { 
             id: "hp30", 
             name: "HP30％以下の敵を攻撃時、ダメージ増加", 
+            icon: icons.hp,
             calcType: "simple",
             items: [
-                { label: "基礎値(固定)", val: 100, fixed: true },
-                { label: "ソケット効果", val: 0 }
+                { label: "基礎値(固定)", val: 100, fixed: true, edit: false, on: true },
+                { label: "ソケット効果", val: 0, fixed: true, edit: false, on: true }
             ] 
         },
     ];
 
     const listContainer = document.getElementById('statsList');
     const totalDisplay = document.getElementById('totalDisplay');
-    
-    // モーダル関連の要素
     const modal = document.getElementById("helpModal");
     const helpBtn = document.getElementById("helpBtn");
     const closeBtn = document.getElementById("closeModal");
@@ -591,17 +578,9 @@
     }
     
     function setupModal() {
-        helpBtn.onclick = function() {
-            modal.style.display = "block";
-        }
-        closeBtn.onclick = function() {
-            modal.style.display = "none";
-        }
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
+        helpBtn.onclick = function() { modal.style.display = "block"; }
+        closeBtn.onclick = function() { modal.style.display = "none"; }
+        window.onclick = function(event) { if (event.target == modal) { modal.style.display = "none"; } }
     }
 
     function render() {
@@ -617,16 +596,16 @@
             header.innerHTML = `
                 <div class="bg-bar" id="bar-${index}"></div>
                 <div class="header-content">
-                    <div class="stat-name">${cat.name}</div>
+                    <div class="stat-name">
+                        <img src="${cat.icon}" class="stat-icon-img" alt="icon">
+                        ${cat.name}
+                    </div>
                     <div class="meta-group">
                         <span class="label-text">合計:</span>
                         <span class="val-text" id="total-${index}">0%</span>
-                        
                         <div class="spacer"></div>
-                        
                         <span class="label-text">1%上昇効率:</span>
                         <span class="eff-text" id="eff-${index}">+0%</span>
-                        
                         <span class="arrow" id="arrow-${index}">▼</span>
                     </div>
                 </div>
@@ -639,7 +618,7 @@
             const note = document.createElement('div');
             note.className = 'formula-note';
             if(cat.calcType === 'crit') {
-                note.innerText = '式: (ステ窓 - 150) + 加算 + (150 × 乗算補正)';
+                note.innerText = '式: (ステ表記 - 150) + 加算 + (150 × 乗算補正)';
             } else {
                 note.innerText = '式: 基礎値(100%) + 加算値の合計';
             }
@@ -671,11 +650,24 @@
         cat.items.forEach((item, itemIndex) => {
             const row = document.createElement('div');
             
-            // トグルの場合は専用レイアウト
             if (item.type === 'toggle') {
                 row.className = 'breakdown-row toggle-row';
             } else {
-                row.className = cat.calcType === 'crit' ? 'breakdown-row crit' : 'breakdown-row simple';
+                let rowClass = cat.calcType === 'crit' ? 'breakdown-row crit' : 'breakdown-row simple';
+                if (item.on === false) rowClass += ' disabled';
+                row.className = rowClass;
+            }
+
+            // 名前入力エリア
+            const nameContainer = document.createElement('div');
+            nameContainer.className = 'name-container';
+            
+            // 固定項目の場合はピンアイコン表示
+            if (item.fixed) {
+                const iconImg = document.createElement('img');
+                iconImg.src = presetIcon;
+                iconImg.className = 'item-icon';
+                nameContainer.appendChild(iconImg);
             }
 
             const nameInput = document.createElement('input');
@@ -684,16 +676,17 @@
             nameInput.placeholder = '項目名';
             if(item.fixed) nameInput.readOnly = true;
             nameInput.oninput = (e) => { cat.items[itemIndex].label = e.target.value; };
-            row.appendChild(nameInput);
+            
+            nameContainer.appendChild(nameInput);
+            row.appendChild(nameContainer);
 
-            // トグルタイプの場合の処理
             if (item.type === 'toggle') {
                 const switchContainer = document.createElement('div');
                 switchContainer.className = 'switch-container';
                 
                 const label = document.createElement('span');
                 label.className = 'switch-label';
-                label.innerText = (item.val > 0 ? '+' : '') + item.val + '%'; // 効果値を表示
+                label.innerText = (item.val > 0 ? '+' : '') + item.val + '%';
                 
                 const labelSwitch = document.createElement('label');
                 labelSwitch.className = 'switch';
@@ -703,6 +696,7 @@
                 chk.checked = item.on;
                 chk.onchange = (e) => {
                     cat.items[itemIndex].on = e.target.checked;
+                    renderRows(catIndex);
                     calculate();
                 };
                 
@@ -716,12 +710,11 @@
                 
                 row.appendChild(switchContainer);
             } else {
-                // 通常の数値入力処理
                 const valInput = document.createElement('input');
                 valInput.type = 'number';
                 valInput.value = item.val;
                 valInput.step = '0.1';
-                if(item.fixed) {
+                if(item.edit === false) {
                     valInput.className = 'fixed-val';
                     valInput.readOnly = true;
                 }
@@ -739,18 +732,21 @@
                 row.appendChild(unitLabel);
             }
 
-            // クリダメ用タイプ選択（トグル以外）
             if (cat.calcType === 'crit' && item.type !== 'toggle') {
-                if (item.type === 'stat_window') {
-                   const emptyBox = document.createElement('div');
-                   row.appendChild(emptyBox);
+                if (item.fixed) {
+                    // 固定項目はタイプ固定
+                    const typeLabel = document.createElement('div');
+                    typeLabel.className = 'type-label';
+                    if (item.type === 'stat_window') typeLabel.innerText = 'ステ';
+                    else if (item.type === 'add') typeLabel.innerText = '加算';
+                    else if (item.type === 'multi') typeLabel.innerText = '乗算';
+                    row.appendChild(typeLabel);
                 } else {
                     const typeSelect = document.createElement('select');
                     const ops = [
                         {val: 'add', text: '加算'},
                         {val: 'multi', text: '乗算'},
                     ];
-                    
                     ops.forEach(o => {
                         const op = document.createElement('option');
                         op.value = o.val;
@@ -766,7 +762,36 @@
                 }
             }
 
-            // 削除ボタン
+            // ON/OFFスイッチ (全項目 - 基礎値だけはスイッチ非表示)
+            if (item.type !== 'toggle') {
+                if(item.label === "基礎値(固定)") {
+                    // スイッチの代わりにダミー
+                    const dummy = document.createElement('div');
+                    dummy.style.width = '36px'; 
+                    row.appendChild(dummy);
+                } else {
+                    const switchContainer = document.createElement('div');
+                    switchContainer.className = 'switch-container';
+                    const labelSwitch = document.createElement('label');
+                    labelSwitch.className = 'switch';
+                    const chk = document.createElement('input');
+                    chk.type = 'checkbox';
+                    chk.checked = item.on !== false;
+                    chk.onchange = (e) => {
+                        cat.items[itemIndex].on = e.target.checked;
+                        renderRows(catIndex);
+                        calculate();
+                    };
+                    const slider = document.createElement('span');
+                    slider.className = 'slider';
+                    labelSwitch.appendChild(chk);
+                    labelSwitch.appendChild(slider);
+                    switchContainer.appendChild(labelSwitch);
+                    row.appendChild(switchContainer);
+                }
+            }
+
+            // 削除ボタン (固定項目は削除不可＝空欄)
             if(!item.fixed) {
                 const delBtn = document.createElement('div');
                 delBtn.className = 'remove-btn';
@@ -790,7 +815,7 @@
     function addItem(catIndex) {
         const cat = statsData[catIndex];
         const type = cat.calcType === 'crit' ? 'multi' : 'add';
-        cat.items.push({ label: '新規', val: 0, fixed: false, type: type });
+        cat.items.push({ label: '新規', val: 0, fixed: false, edit: true, type: type, on: true });
         renderRows(catIndex);
     }
 
@@ -815,6 +840,8 @@
                 let additiveTotal = 0;
                 let multiplierProduct = 1.0;
                 cat.items.forEach(item => {
+                    if (item.on === false) return; // OFFならスキップ
+
                     if (item.type === 'stat_window') {
                         additiveTotal += (item.val - 150);
                     } else if (item.type === 'add') {
@@ -822,25 +849,29 @@
                     } else if (item.type === 'multi') {
                         multiplierProduct *= (1 + item.val / 100);
                     } else if (item.type === 'toggle') {
-                        // トグルがONの時だけ乗算計算に含める
-                        if (item.on) {
-                            multiplierProduct *= (1 + item.val / 100);
-                        }
+                        if (item.on) multiplierProduct *= (1 + item.val / 100);
                     }
                 });
                 const base = 150;
                 catTotal = additiveTotal + (base * multiplierProduct);
             } else {
-                catTotal = cat.items.reduce((sum, item) => sum + item.val, 0);
+                catTotal = cat.items.reduce((sum, item) => {
+                    if (item.on === false) return sum;
+                    return sum + item.val;
+                }, 0);
             }
 
-            if (catTotal <= 0) catTotal = 1;
+            if (catTotal <= 0) catTotal = 0;
             
             document.getElementById(`total-${idx}`).innerText = catTotal.toFixed(2) + '%';
             
-            globalMultiplier *= (catTotal / 100);
+            if (catTotal === 0) {
+                globalMultiplier = 0;
+            } else {
+                globalMultiplier *= (catTotal / 100);
+            }
 
-            const eff = (1 / catTotal) * 100;
+            const eff = catTotal > 0 ? (1 / catTotal) * 100 : 0;
             efficiencies.push({ index: idx, val: eff, total: catTotal });
             document.getElementById(`eff-${idx}`).innerText = '+' + eff.toFixed(3) + '%';
         });
@@ -857,7 +888,7 @@
             bar.style.backgroundColor = '';
             card.style.borderLeftColor = '';
             
-            const width = (item.val / maxEff) * 100;
+            const width = (maxEff > 0) ? (item.val / maxEff) * 100 : 0;
             bar.style.width = `${width}%`;
 
             if (item.total > 280) {
@@ -868,7 +899,7 @@
             } else {
                 card.setAttribute('data-over', 'false');
                 if (rank > 1) {
-                    const opacity = Math.max(0.1, (item.val / maxEff) * 0.2); 
+                    const opacity = (maxEff > 0) ? Math.max(0.1, (item.val / maxEff) * 0.2) : 0; 
                     bar.style.opacity = opacity;
                     card.style.borderLeftColor = `rgba(0, 229, 255, ${Math.max(0.3, item.val / maxEff)})`;
                 } else {
